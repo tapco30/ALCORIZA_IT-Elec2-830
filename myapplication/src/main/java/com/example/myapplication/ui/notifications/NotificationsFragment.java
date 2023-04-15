@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,8 +38,17 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
+        textView =binding.textNotifications;
+
+        final Button checkStatus = binding.buttonCheck;
         notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        checkStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().registerReceiver(broadcastReceiver,intentFilter);
+            }
+        });
         return root;
     }
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
